@@ -13,7 +13,7 @@ public class mapGenerationCube : MonoBehaviour
     public int sizeMapX;
     public int sizeMapY;
 
-    float[,] matriceTestMap = new float[200, 200];
+    float[,] matriceTestMap = new float[100, 100];
     // Start is called before the first frame update
     void Start()
     {
