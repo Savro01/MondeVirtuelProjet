@@ -10,7 +10,10 @@ public class mapGenerationCube : MonoBehaviour
     public Material rock;
     public Material snow;
 
-    Vector3[,] matriceTestMap = new Vector3[100, 100];
+    public int sizeMapX;
+    public int sizeMapY;
+
+    float[,] matriceTestMap = new float[200, 200];
     // Start is called before the first frame update
     void Start()
     {
@@ -30,25 +33,26 @@ public class mapGenerationCube : MonoBehaviour
         {
             for (int j = 0; j < matriceTestMap.GetLength(1); j++)
             {
-                float x = Random.Range(-50.0f, 50.0f);
                 float y = Random.Range(-1.0f, 20.0f);
-                float z = Random.Range(-50.0f, 50.0f);
-
-                matriceTestMap[i, j] = new Vector3(x, y, z);
+                matriceTestMap[i, j] = y;
             }
         }
     }
     void creationMapCube()
     {
-        Vector3 cubeData = Vector3.zero;
+        float cubeData;
         GameObject cube;
-        for (int i = 0; i < matriceTestMap.GetLength(0); i++)
+
+        float matriceX = matriceTestMap.GetLength(0);
+        float matriceZ = matriceTestMap.GetLength(1);
+        for (int i = 0; i < matriceX; i++)
         {
-            for (int j = 0; j < matriceTestMap.GetLength(1); j++)
+            for (int j = 0; j < matriceZ; j++)
             {
                 cubeData = matriceTestMap[i, j];
                 cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                cube.transform.position = new Vector3(cubeData.x, cubeData.y, cubeData.z);
+                cube.transform.position = new Vector3(((float)i/matriceX)*100, cubeData, ((float)j/matriceZ)*100);
+                cube.transform.localScale = new Vector3(100 / matriceX, 100 / matriceX, 100 / matriceZ);
                 cube.transform.parent = transform;
                 colorCubeGestion(cube);
             }
