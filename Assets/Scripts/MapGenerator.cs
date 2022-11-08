@@ -5,10 +5,10 @@ using UnityEngine;
 public class MapGenerator : MonoBehaviour
 {
     // Paramétres de la noise map
-    [Range(1, 100)]
+    [Range(1, 200)]
     public int mapWidth;
 
-    [Range(1, 100)]
+    [Range(1, 200)]
     public int mapHeight;
 
     [Range(1.01f,100f)]
@@ -79,7 +79,7 @@ public class MapGenerator : MonoBehaviour
             for (int z = 0; z < terrainMatrix.GetLength(1); z++)
             {
                 //Getting height for the cube
-                float height = noiseMap[x, z] * 100;
+                float height = Mathf.Round(noiseMap[x, z] * 25);
 
                 //Setting value 
                 terrainMatrix[x, z] = height;
@@ -89,36 +89,89 @@ public class MapGenerator : MonoBehaviour
         return terrainMatrix;
     }
 
+    float getNeighbourDiff(int i, int j, int matriceX, int matriceZ)
+    {
+        float min;
+        if(i == 0)
+        {
+            if(j == 0)
+            {
+                min = Mathf.Min(terrainMatrix[i + 1, j], terrainMatrix[i, j + 1]);
+            }else if(j == matriceZ-1)
+            {
+                min = Mathf.Min(terrainMatrix[i + 1, j], terrainMatrix[i, j - 1]);
+            }
+            else
+            {
+                min = Mathf.Min(terrainMatrix[i + 1, j], Mathf.Min(terrainMatrix[i, j - 1], terrainMatrix[i, j + 1]));
+            }
+        }
+        else if (i == matriceX-1)
+        {
+            if (j == 0)
+            {
+                min = Mathf.Min(terrainMatrix[i - 1, j], terrainMatrix[i, j + 1]);
+            }
+            else if (j == matriceZ-1)
+            {
+                min = Mathf.Min(terrainMatrix[i - 1, j], terrainMatrix[i, j - 1]);
+            }
+            else
+            {
+                min = Mathf.Min(terrainMatrix[i - 1, j], Mathf.Min(terrainMatrix[i, j - 1], terrainMatrix[i, j + 1]));
+            }
+        }
+        else if (j == 0)
+        {
+            min = Mathf.Min(terrainMatrix[i + 1, j], Mathf.Min(terrainMatrix[i - 1, j], terrainMatrix[i, j + 1]));
+        }
+        else if (j == matriceZ-1)
+        {
+            min = Mathf.Min(terrainMatrix[i + 1, j], Mathf.Min(terrainMatrix[i - 1, j], terrainMatrix[i, j - 1]));
+        }
+        else
+        {
+            min = Mathf.Min(terrainMatrix[i - 1, j], Mathf.Min(terrainMatrix[i + 1, j], Mathf.Min(terrainMatrix[i, j + 1], terrainMatrix[i, j - 1])));
+        }
+        return terrainMatrix[i, j] > min ? terrainMatrix[i, j] - min : 1;
+    }
+
+
     void creationMapCube()
     {
         float cubeData;
         GameObject cube;
 
-        float matriceX = terrainMatrix.GetLength(0);
-        float matriceZ = terrainMatrix.GetLength(1);
+        int matriceX = terrainMatrix.GetLength(0);
+        int matriceZ = terrainMatrix.GetLength(1);
         for (int i = 0; i < matriceX; i++)
         {
             for (int j = 0; j < matriceZ; j++)
             {
                 cubeData = terrainMatrix[i, j];
-                cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                cube.transform.position = new Vector3(((float)i / matriceX) * 100, cubeData, ((float)j / matriceZ) * 100);
-                cube.transform.localScale = new Vector3(100 / matriceX, 100 / matriceX, 100 / matriceZ);
-                cube.transform.parent = transform;
-                colorCubeGestion(cube);
+                float diffNeighbour = getNeighbourDiff(i, j, matriceX, matriceZ);
+
+                for (int k = 0; k < diffNeighbour; k++)
+                {
+                    cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    cube.transform.position = new Vector3(((float)i /(float)matriceX) * 100, ((cubeData - k) * 100/(float)matriceX), ((float)j /(float)matriceZ) * 100);
+                    cube.transform.localScale = new Vector3(100 / (float)matriceX, 100/(float)matriceX, 100/(float)matriceZ);
+                    cube.transform.parent = transform;
+                    colorCubeGestion(cube);
+                }
             }
         }
     }
 
     void colorCubeGestion(GameObject cube)
     {
-        if (cube.transform.position.y < 0)
+        if (cube.transform.position.y < 4)
             cube.GetComponent<MeshRenderer>().material = water;
-        else if (cube.transform.position.y < 2)
+        else if (cube.transform.position.y < 6)
             cube.GetComponent<MeshRenderer>().material = sand;
-        else if (cube.transform.position.y < 7)
+        else if (cube.transform.position.y < 14)
             cube.GetComponent<MeshRenderer>().material = grass;
-        else if (cube.transform.position.y < 15)
+        else if (cube.transform.position.y < 20)
             cube.GetComponent<MeshRenderer>().material = rock;
         else
             cube.GetComponent<MeshRenderer>().material = snow;

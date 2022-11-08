@@ -445,13 +445,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mapWidth: 100
   mapHeight: 100
-  noiseScale: 21.2
-  octaves: 2
-  persistance: 0.83
-  lacunarity: 4.34
+  noiseScale: 24
+  octaves: 1
+  persistance: 2.37
+  lacunarity: 3.14
   seed: 0
-  offset: {x: 0, y: 0}
-  autoUpdate: 1
+  offset: {x: 9.5, y: -17.72}
+  autoUpdate: 0
   grass: {fileID: 2100000, guid: 1e0b6c11142d1b54f939826119518dcb, type: 2}
   water: {fileID: 2100000, guid: d50b17db46206894aa6a6727734c6805, type: 2}
   sand: {fileID: 2100000, guid: c8a5999e5e0d2114cb22ee3a220de811, type: 2}
