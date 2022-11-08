@@ -27,6 +27,12 @@ public class MapGenerator : MonoBehaviour
 
     public bool autoUpdate = false;
 
+    void Start()
+    {
+        MapGenerator mapGen = GetComponent<MapGenerator>();
+        mapGen.GenerateMap();
+    }
+
     public void GenerateMap()
     {
         float[,] noiseMap = Noise.GenerateNoiseMap(mapWidth, mapHeight, seed, noiseScale, octaves, persistance, lacunarity, offset);
