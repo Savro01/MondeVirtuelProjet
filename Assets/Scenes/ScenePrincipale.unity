@@ -123,55 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &569101824
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 569101826}
-  - component: {fileID: 569101825}
-  m_Layer: 0
-  m_Name: Map
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &569101825
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 569101824}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 722127088103e07499d319014cd2b72c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  grass: {fileID: 2100000, guid: 1e0b6c11142d1b54f939826119518dcb, type: 2}
-  water: {fileID: 2100000, guid: d50b17db46206894aa6a6727734c6805, type: 2}
-  sand: {fileID: 2100000, guid: c8a5999e5e0d2114cb22ee3a220de811, type: 2}
-  rock: {fileID: 2100000, guid: c653cb7864da88f44943546075461746, type: 2}
-  snow: {fileID: 2100000, guid: 3685ac08732b2e04c9e350020a493ce8, type: 2}
---- !u!4 &569101826
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 569101824}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -443,7 +394,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1955038726}
   - component: {fileID: 1955038729}
-  - component: {fileID: 1955038728}
   - component: {fileID: 1955038727}
   m_Layer: 0
   m_Name: Map Generator
@@ -466,7 +416,7 @@ Transform:
   m_Children:
   - {fileID: 1574054960}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1955038727
 MonoBehaviour:
@@ -481,18 +431,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textureRenderer: {fileID: 1574054962}
---- !u!114 &1955038728
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1955038725}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b883d5444fa60154682c0509b0e4db9d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1955038729
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -514,3 +452,8 @@ MonoBehaviour:
   seed: 0
   offset: {x: 0, y: 0}
   autoUpdate: 1
+  grass: {fileID: 2100000, guid: 1e0b6c11142d1b54f939826119518dcb, type: 2}
+  water: {fileID: 2100000, guid: d50b17db46206894aa6a6727734c6805, type: 2}
+  sand: {fileID: 2100000, guid: c8a5999e5e0d2114cb22ee3a220de811, type: 2}
+  rock: {fileID: 2100000, guid: c653cb7864da88f44943546075461746, type: 2}
+  snow: {fileID: 2100000, guid: 3685ac08732b2e04c9e350020a493ce8, type: 2}
