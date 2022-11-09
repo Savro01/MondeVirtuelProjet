@@ -47,8 +47,9 @@ public class MapGenerator : MonoBehaviour
     public void GenerateMap()
     {
         float[,] noiseMap = Noise.GenerateNoiseMap(mapWidth, mapHeight, seed, noiseScale, octaves, persistance, lacunarity, offset);
+        float[,] noiseMap2 = Noise.GenerateNoiseMap(mapWidth, mapHeight, seed+1, noiseScale, octaves+1, persistance, lacunarity, offset);
 
-        terrainMatrix = CreateTerrainMatrix(noiseMap, 1);
+        terrainMatrix = CreateTerrainMatrix(noiseMap, noiseMap2, 1);
 
         MapDisplay display = FindObjectOfType<MapDisplay>();
         display.DrawNoiseMap(noiseMap);
@@ -63,14 +64,14 @@ public class MapGenerator : MonoBehaviour
     }
 
     //Create a matrix containing height position for each cube in plan
-    // noiseMap : matrix 1000x1000 containing values between 0 and 1
+    // noiseMap : matrix 150x150 containing values between 0 and 1
     // scaling : parameter to choose the resolution of terrain (divide the noiseMap), possible values : [1,2,4,8]
     // RETURN : the matrix of the terrain
-    public float[,] CreateTerrainMatrix(float[,] noiseMap, int scaling)
+    public float[,] CreateTerrainMatrix(float[,] noiseMap1, float[,] noiseMap2, int scaling)
     {
 
         //Creating a matrix
-        float[,] terrainMatrix = new float[noiseMap.GetLength(0) / scaling, noiseMap.GetLength(1) / scaling];
+        float[,] terrainMatrix = new float[noiseMap1.GetLength(0) / scaling, noiseMap1.GetLength(1) / scaling];
 
         //On X
         for (int x = 0; x < terrainMatrix.GetLength(0); x++)
@@ -79,8 +80,15 @@ public class MapGenerator : MonoBehaviour
             for (int z = 0; z < terrainMatrix.GetLength(1); z++)
             {
                 //Getting height for the cube
-                float height = Mathf.Round(noiseMap[x, z] * 25);
-
+                float height;
+                if (noiseMap1[x, z] + noiseMap1[x, z] < 1.5f)
+                {
+                    height = Mathf.Round(noiseMap1[x, z] * 50 - noiseMap2[x, z] * 20);
+                }
+                else
+                {
+                    height = Mathf.Round(noiseMap1[x, z] * 50 - noiseMap2[x, z] * 15);
+                }
                 //Setting value 
                 terrainMatrix[x, z] = height;
             }
@@ -165,13 +173,13 @@ public class MapGenerator : MonoBehaviour
 
     void colorCubeGestion(GameObject cube)
     {
-        if (cube.transform.position.y < 4)
+        if (cube.transform.position.y < 4 * cube.transform.localScale.y)
             cube.GetComponent<MeshRenderer>().material = water;
-        else if (cube.transform.position.y < 6)
+        else if (cube.transform.position.y < 6 * cube.transform.localScale.y)
             cube.GetComponent<MeshRenderer>().material = sand;
-        else if (cube.transform.position.y < 14)
+        else if (cube.transform.position.y < 24 * cube.transform.localScale.y)
             cube.GetComponent<MeshRenderer>().material = grass;
-        else if (cube.transform.position.y < 20)
+        else if (cube.transform.position.y < 28 * cube.transform.localScale.y)
             cube.GetComponent<MeshRenderer>().material = rock;
         else
             cube.GetComponent<MeshRenderer>().material = snow;
