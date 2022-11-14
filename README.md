@@ -11,3 +11,12 @@ Ajouter des bouts de terrain dans la rivière (Goal 5)
 Done : 
 
 Goal 0.5
+
+
+ReadMe officiel : 
+
+Ce projet est un projet de génération de rivières procéduralement. 
+Dans le cadre de ce projet, nous avons générer des "routes", qui sont enfaite des riviéres de maniére procédurales.
+
+Dans un premier lieu, nous avons générés le terrain, sous forme de cube, via des matrices et un "noise" afin d'avoir
+un terrain aléatoire.
