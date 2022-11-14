@@ -7,9 +7,7 @@ public class RiverGenerator : MonoBehaviour
 
     bool[,] riverLineMatrix;
 
-    public int hauteurMax;
     public int distanceMax;
-    public int tentativeMax;
 
     // Start is called before the first frame update
     void Start()
@@ -23,25 +21,11 @@ public class RiverGenerator : MonoBehaviour
         
     }
 
-    void makeRiverLine(float[,] terrain, List<Vector2> listBordure)
+    public bool[,] makeRiverLine(float[,] terrain, List<Vector2> listBordure)
     {
-        /*Créer une matrice de la même taille que celle de la map
-        Trouver un point de départ parmis les les blocs “rivières” (hauteur < 4)
-        Tant que hauteur_choisie < hauteur < max et que distance parcourue<distance_max et tentative
-        Chercher le bloc le plus haut dans un rayon autour de ce bloc (rayon = 1)
-        Si pas de bloc plus haut et rayon<rayonMax
-        Alors on augmente le rayon de 1
-        On cherche le bloc plus haut dans ce rayon
-        Recommencer boucle
-        Si un bloc plus haut
-        Alors le bloc le plus haut devient un bloc rivière
-        Si ce bloc est à une hauteur relative supérieure à 1
-        Alors les blocs sous ce bloc deviennent rivière
-        Le bloc le plus haut devient le nouveau bloc de départ
-        Recommencer la boucle*/
-
+        Debug.Log("Init makeRiverLine");
         //Création de la matrice rivière(droite)
-        riverLineMatrix = new bool[terrain.GetLength(0), terrain.GetLength(1)];
+        riverLineMatrix = initRiverMatrix(terrain);
 
         //Choix du/des blocs de départ
         Vector2 startBloc = listBordure[Random.Range(0, listBordure.Count)];
@@ -49,27 +33,101 @@ public class RiverGenerator : MonoBehaviour
         //Pour chaque bloc de départ
         //For(int i = 0; i < listBlocDepart; i++){}
         bool arret = false;
-        int tentative = 0;
+        int distance = 0;
         while (!arret)
         {
+            Debug.Log("Dans le while");
             //terrain[startBloc.x, startBloc.y]
-            if (tentative >= tentativeMax)
+            if (distance >= distanceMax)
                 arret = true;
 
-            //getHeightestBloc();
+            Vector2 nextBloc = getNextBloc(terrain, startBloc, 5);
 
+            if (nextBloc.x != -1 && nextBloc.y != -1)
+            {
+                riverLineMatrix[(int)nextBloc.x, (int)nextBloc.y] = true;
+                startBloc = nextBloc;
+            }
+            else
+                distance = distanceMax;
+
+            distance++;
         }
-
-            
-            
+        return riverLineMatrix;
     }
 
-    Vector2 getHeightestBloc(float[,] terrain, Vector2 startBloc)
+    Vector2 getNextBloc(float[,] terrain, Vector2 startBloc, int rayonMax)
     {
-        if (terrain[(int)startBloc.x, (int)startBloc.y] < terrain[(int)startBloc.x, (int)startBloc.y])
+        List<Vector2> possibleBloc = new List<Vector2>();
+        bool blocFind = false;
+
+        for(int r = 1; r < rayonMax; r++)
         {
+            //Cotés
+            if (terrain[(int)startBloc.x, (int)startBloc.y] < terrain[(int)startBloc.x + 1, (int)startBloc.y])
+            {
+                possibleBloc.Add(new Vector2(startBloc.x + 1, startBloc.y));
+                blocFind = true;
+            }
+            if (terrain[(int)startBloc.x, (int)startBloc.y] < terrain[(int)startBloc.x, (int)startBloc.y + 1])
+            {
+                possibleBloc.Add(new Vector2(startBloc.x, startBloc.y + 1));
+                blocFind = true;
+            }
+            if (terrain[(int)startBloc.x, (int)startBloc.y] < terrain[(int)startBloc.x - 1, (int)startBloc.y])
+            {
+                possibleBloc.Add(new Vector2(startBloc.x - 1, startBloc.y));
+                blocFind = true;
+            }
+            if (terrain[(int)startBloc.x, (int)startBloc.y] < terrain[(int)startBloc.x, (int)startBloc.y - 1])
+            {
+                possibleBloc.Add(new Vector2(startBloc.x, startBloc.y - 1));
+                blocFind = true;
+            }
+
+            //Diagonales
+            if (terrain[(int)startBloc.x, (int)startBloc.y] < terrain[(int)startBloc.x + 1, (int)startBloc.y + 1])
+            {
+                possibleBloc.Add(new Vector2(startBloc.x + 1, startBloc.y + 1));
+                blocFind = true;
+            }
+            if (terrain[(int)startBloc.x, (int)startBloc.y] < terrain[(int)startBloc.x - 1, (int)startBloc.y + 1])
+            {
+                possibleBloc.Add(new Vector2(startBloc.x - 1, startBloc.y + 1));
+                blocFind = true;
+            }
+            if (terrain[(int)startBloc.x, (int)startBloc.y] < terrain[(int)startBloc.x - 1, (int)startBloc.y - 1])
+            {
+                possibleBloc.Add(new Vector2(startBloc.x - 1, startBloc.y - 1));
+                blocFind = true;
+            }
+            if (terrain[(int)startBloc.x, (int)startBloc.y] < terrain[(int)startBloc.x - 1, (int)startBloc.y + 1])
+            {
+                possibleBloc.Add(new Vector2(startBloc.x - 1, startBloc.y + 1));
+                blocFind = true;
+            }
+
+            if (blocFind && r == 1)
+                return possibleBloc[Random.Range(0, possibleBloc.Count)];
+            else if(blocFind && r != 1)
+            {
+                return new Vector2(possibleBloc[Random.Range(0, possibleBloc.Count)].x - r + 1, possibleBloc[Random.Range(0, possibleBloc.Count)].y - r + 1);
+            }
 
         }
-        return Vector2.zero;
+        return new Vector2(-1, -1);
+    }
+
+    bool[,] initRiverMatrix(float[,] terrain)
+    {
+        bool[,] mat = new bool[terrain.GetLength(0), terrain.GetLength(1)];
+        for(int i=0; i < mat.GetLength(0); i++)
+        {
+            for (int j = 0; j < mat.GetLength(1); j++)
+            {
+                mat[i, j] = false;
+            }
+        }
+        return mat;
     }
 }

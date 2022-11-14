@@ -395,6 +395,7 @@ GameObject:
   - component: {fileID: 1955038726}
   - component: {fileID: 1955038729}
   - component: {fileID: 1955038727}
+  - component: {fileID: 1955038730}
   m_Layer: 0
   m_Name: Map Generator
   m_TagString: Untagged
@@ -457,3 +458,16 @@ MonoBehaviour:
   sand: {fileID: 2100000, guid: c8a5999e5e0d2114cb22ee3a220de811, type: 2}
   rock: {fileID: 2100000, guid: c653cb7864da88f44943546075461746, type: 2}
   snow: {fileID: 2100000, guid: 3685ac08732b2e04c9e350020a493ce8, type: 2}
+--- !u!114 &1955038730
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1955038725}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 128f2747a7205c946a774b5e839426bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  distanceMax: 25

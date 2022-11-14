@@ -36,14 +36,13 @@ public class MapGenerator : MonoBehaviour
     public Material snow;
 
     float[,] terrainMatrix;
+    bool[,] riverMatrix;
 
     //List<Vector2> bordures = new List<Vector2>();
 
     void Start()
     {
         GenerateMap();
-        List<Vector2> bordures = creationBorduresEau();
-        creationMapCube(bordures);
     }
 
     //Returns the coordinates of the cubes which are in border of water.
@@ -71,7 +70,10 @@ public class MapGenerator : MonoBehaviour
         float[,] noiseMap2 = Noise.GenerateNoiseMap(mapWidth, mapHeight, seed+1, noiseScale, octaves+1, persistance, lacunarity, offset);
 
         terrainMatrix = CreateTerrainMatrix(noiseMap, noiseMap2, 1);
-
+        List<Vector2> bordures = creationBorduresEau();
+        riverMatrix = GetComponent<RiverGenerator>().makeRiverLine(terrainMatrix, bordures);
+        creationMapCube(bordures);
+      
         MapDisplay display = FindObjectOfType<MapDisplay>();
         display.DrawNoiseMap(noiseMap);
     }
@@ -183,16 +185,16 @@ public class MapGenerator : MonoBehaviour
                     cube.transform.position = new Vector3(((float)i /(float)matriceX) * 100, ((cubeData - k) * 100/(float)matriceX), ((float)j /(float)matriceZ) * 100);
                     cube.transform.localScale = new Vector3(100 / (float)matriceX, 100/(float)matriceX, 100/(float)matriceZ);
                     cube.transform.parent = transform;
-                    colorCubeGestion(bordures, cube);
+                    colorCubeGestion(cube, i, j);
                 }
             }
         }
     }
 
-    void colorCubeGestion(List<Vector2> bordures, GameObject cube)
+    void colorCubeGestion(GameObject cube, int matriceX, int matriceZ)
     {
         Vector2 position = new Vector2(cube.transform.position.x, cube.transform.position.z);
-        if (!bordures.Contains(position))
+        if(riverMatrix[matriceX, matriceZ] != true)
         {
             if (cube.transform.position.y < 4 * cube.transform.localScale.y)
                 cube.GetComponent<MeshRenderer>().material = water;
@@ -206,8 +208,6 @@ public class MapGenerator : MonoBehaviour
                 cube.GetComponent<MeshRenderer>().material = snow;
         }
         else
-        {
-            cube.GetComponent<MeshRenderer>().material = snow;
-        }
+            cube.GetComponent<MeshRenderer>().material = water;
     }
 }
