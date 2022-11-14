@@ -80,14 +80,7 @@ public class MapGenerator : MonoBehaviour
             {
                 //Getting height for the cube
                 float height;
-                if (noiseMap1[x, z] + noiseMap1[x, z] < 1.5f)
-                {
-                    height = Mathf.Round(noiseMap1[x, z] * x/3 + 2 - noiseMap2[x, z] * (terrainMatrix.GetLength(1)-z) /20);
-                }
-                else
-                {
-                    height = Mathf.Round(noiseMap1[x, z] * x/3 + 2 - noiseMap2[x, z] * (terrainMatrix.GetLength(1)-z) /20);
-                }
+                height = Mathf.Round(noiseMap1[x, z] * x/3 + 2 - noiseMap2[x, z] * (terrainMatrix.GetLength(1)-z) /20);
                 if (height < 4)
                 {
                     height = 3;
@@ -180,9 +173,9 @@ public class MapGenerator : MonoBehaviour
             cube.GetComponent<MeshRenderer>().material = water;
         else if (cube.transform.position.y < 6 * cube.transform.localScale.y)
             cube.GetComponent<MeshRenderer>().material = sand;
-        else if (cube.transform.position.y < 24 * cube.transform.localScale.y)
+        else if (cube.transform.position.y < 40 * cube.transform.localScale.y)
             cube.GetComponent<MeshRenderer>().material = grass;
-        else if (cube.transform.position.y < 28 * cube.transform.localScale.y)
+        else if (cube.transform.position.y < 55 * cube.transform.localScale.y)
             cube.GetComponent<MeshRenderer>().material = rock;
         else
             cube.GetComponent<MeshRenderer>().material = snow;
