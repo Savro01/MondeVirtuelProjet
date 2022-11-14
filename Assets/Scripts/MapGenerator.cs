@@ -40,10 +40,6 @@ public class MapGenerator : MonoBehaviour
     void Start()
     {
         GenerateMap();
-        int i = 2;
-        while (i > 0){
-            i--;
-        }
         creationMapCube();
     }
 
