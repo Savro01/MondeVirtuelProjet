@@ -23,7 +23,6 @@ public class RiverGenerator : MonoBehaviour
 
     public bool[,] makeRiverLine(float[,] terrain, List<Vector2> listBordure)
     {
-        Debug.Log("Init makeRiverLine");
         //Création de la matrice rivière(droite)
         riverLineMatrix = initRiverMatrix(terrain);
 
@@ -36,14 +35,13 @@ public class RiverGenerator : MonoBehaviour
         int distance = 0;
         while (!arret)
         {
-            Debug.Log("Dans le while");
             //terrain[startBloc.x, startBloc.y]
             if (distance >= distanceMax)
                 arret = true;
 
             Vector2 nextBloc = getNextBloc(terrain, startBloc, 5);
 
-            if (nextBloc.x != -1 && nextBloc.y != -1)
+            if (nextBloc != startBloc && !riverLineMatrix[(int)nextBloc.x, (int)nextBloc.y])
             {
                 riverLineMatrix[(int)nextBloc.x, (int)nextBloc.y] = true;
                 startBloc = nextBloc;
@@ -72,18 +70,23 @@ public class RiverGenerator : MonoBehaviour
                         if (terrain[(int)startBloc.x, (int)startBloc.y] < terrain[(int)startBloc.x + i, (int)startBloc.y + j])
                         {
                             possibleBloc.Add(new Vector2(startBloc.x + i, startBloc.y + j));
-                            blocFind = true;
                         }
                     }
                 }
             }
-            if (blocFind && r == 1)
-                return possibleBloc[Random.Range(0, possibleBloc.Count)];
-            else if(blocFind && r != 1)
+            if (possibleBloc.Count > 0)
             {
-                return new Vector2(possibleBloc[Random.Range(0, possibleBloc.Count)].x - r + 1, possibleBloc[Random.Range(0, possibleBloc.Count)].y - r + 1);
+                int random = Random.Range(0, possibleBloc.Count);
+                if (r == 1)
+                {
+                    return possibleBloc[random];
+                }
+                else
+                {
+                    //return new Vector2(possibleBloc[random].x - r + 1, possibleBloc[random].y - r + 1);
+                    return startBloc;
+                }
             }
-
         }
         return startBloc;
     }

@@ -57,7 +57,8 @@ public class MapGenerator : MonoBehaviour
             {
                 if (terrainMatrix[i, j] < 4 && (terrainMatrix[i, j + 1] == 4 || terrainMatrix[i + 1, j] == 4 || terrainMatrix[i - 1, j] == 4 || terrainMatrix[i, j - 1] == 4))
                 {
-                    bordures.Add(new Vector2(((float)i / (float)matriceX) * 100, ((float)j / (float)matriceY) * 100));
+                    //bordures.Add(new Vector2(((float)i / (float)matriceX) * 100, ((float)j / (float)matriceY) * 100));
+                    bordures.Add(new Vector2(i, j));
                 }
             }
         }
