@@ -15,6 +15,10 @@ public class mapGenerationCube : MonoBehaviour
     void Start()
     {
         initMatriceTest();
+        for(int i = 0; i < 1; i++)
+        {
+            i = i;
+        }
         creationMapCube();
     }
 
