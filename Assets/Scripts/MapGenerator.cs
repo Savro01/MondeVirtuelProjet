@@ -5,10 +5,10 @@ using UnityEngine;
 public class MapGenerator : MonoBehaviour
 {
     // Paramétres de la noise map
-    [Range(1, 200)]
+    [Range(1, 300)]
     public int mapWidth;
 
-    [Range(1, 200)]
+    [Range(1, 300)]
     public int mapHeight;
 
     [Range(1.01f,100f)]
@@ -83,11 +83,15 @@ public class MapGenerator : MonoBehaviour
                 float height;
                 if (noiseMap1[x, z] + noiseMap1[x, z] < 1.5f)
                 {
-                    height = Mathf.Round(noiseMap1[x, z] * 50 - noiseMap2[x, z] * 20);
+                    height = Mathf.Round(noiseMap1[x, z] * x/3 + 2 - noiseMap2[x, z] * (terrainMatrix.GetLength(1)-z) /20);
                 }
                 else
                 {
-                    height = Mathf.Round(noiseMap1[x, z] * 50 - noiseMap2[x, z] * 15);
+                    height = Mathf.Round(noiseMap1[x, z] * x/3 + 2 - noiseMap2[x, z] * (terrainMatrix.GetLength(1)-z) /20);
+                }
+                if (height < 4)
+                {
+                    height = 3;
                 }
                 //Setting value 
                 terrainMatrix[x, z] = height;

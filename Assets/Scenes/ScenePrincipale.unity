@@ -443,13 +443,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51e75bb3010f11445bd0aca2cace7c5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapWidth: 150
-  mapHeight: 150
+  mapWidth: 230
+  mapHeight: 230
   noiseScale: 48
   octaves: 1
   persistance: 2.37
   lacunarity: 3.14
-  seed: 0
+  seed: 26
   offset: {x: 9.5, y: -17.72}
   autoUpdate: 0
   grass: {fileID: 2100000, guid: 1e0b6c11142d1b54f939826119518dcb, type: 2}
