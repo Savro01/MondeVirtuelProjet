@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(RiverGenerator))]
 public class MapGenerator : MonoBehaviour
 {
     // Paramétres de la noise map
@@ -38,10 +39,13 @@ public class MapGenerator : MonoBehaviour
     float[,] terrainMatrix;
     bool[,] riverMatrix;
 
+    RiverGenerator riverGenerator;
+
     //List<Vector2> bordures = new List<Vector2>();
 
     void Start()
     {
+        riverGenerator = GetComponent<RiverGenerator>();
         GenerateMap();
     }
 
@@ -72,7 +76,7 @@ public class MapGenerator : MonoBehaviour
 
         terrainMatrix = CreateTerrainMatrix(noiseMap, noiseMap2, 1);
         List<Vector2> bordures = creationBorduresEau();
-        riverMatrix = GetComponent<RiverGenerator>().makeRiverLine(terrainMatrix, bordures);
+        riverMatrix = riverGenerator.makeRiverLine(terrainMatrix, bordures);
         creationMapCube(bordures);
       
         MapDisplay display = FindObjectOfType<MapDisplay>();
@@ -192,10 +196,9 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-    void colorCubeGestion(GameObject cube, int matriceX, int matriceZ)
+    void colorCubeGestion(GameObject cube, int x, int z)
     {
-        Vector2 position = new Vector2(cube.transform.position.x, cube.transform.position.z);
-        if(riverMatrix[matriceX, matriceZ] != true)
+        if(!riverMatrix[x, z])
         {
             if (cube.transform.position.y < 4 * cube.transform.localScale.y)
                 cube.GetComponent<MeshRenderer>().material = water;

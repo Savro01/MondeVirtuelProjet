@@ -17,47 +17,65 @@ public class RiverGenerator : MonoBehaviour
         //Choix du/des blocs de départ
         //Vector2 startBloc = listBordure[Random.Range(0, listBordure.Count)];
         
-        Vector2 startBloc = listBordure[55];
 
         //Pour chaque bloc de départ
         //For(int i = 0; i < listBlocDepart; i++){}
-        int distance = 0;
-        int rayon = 10;
-        while (distance < distanceMax)
-        {
-            Vector2 nextBloc = getNextBloc(terrain, startBloc, rayon);
+        int rayon = 15;
 
-            if (nextBloc != startBloc)
+        for (int i = 0; i < 50; i++)
+        {
+            Vector2 startBloc = listBordure[Random.Range(0,listBordure.Count)];
+            int distance = 0;
+            while (distance < distanceMax)
             {
-                riverLineMatrix[(int)nextBloc.x, (int)nextBloc.y] = true;
-                startBloc = nextBloc;
-                distance++;
+                Vector2 nextBloc = getNextBloc(terrain, startBloc, rayon);
+
+                if (nextBloc != startBloc)
+                {
+                    riverLineMatrix[(int)nextBloc.x, (int)nextBloc.y] = true;
+                    linkPath(startBloc, nextBloc);
+                    startBloc = nextBloc;
+                    distance++;
+                }
+                else
+                    break;
             }
-            else
-                break;
         }
+
         return riverLineMatrix;
+    }
+
+    void linkPath(Vector2 startBloc, Vector2 nextBloc)
+    {
+        Vector2 current = startBloc;
+
+        while(current != nextBloc)
+        {
+            Vector2 diff = nextBloc - current;
+            int signX = diff.x < 0 ? -1 : diff.x > 0 ? 1 : 0;
+            int signY = diff.y < 0 ? -1 : diff.y > 0 ? 1 : 0;
+            current = current + new Vector2(signX, signY);
+            riverLineMatrix[(int)current.x, (int)current.y] = true;
+        }
     }
 
     Vector2 getNextBloc(float[,] terrain, Vector2 startBloc, int rayonMax)
     {
-        Debug.Log("NEXT BLOC");
-        Debug.Log(startBloc);
         List<Vector2> possibleBloc = new List<Vector2>();
 
-        for(int r = 1; r <= rayonMax; r++)
+        //GameObject go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        //go.transform.position = new Vector3(startBloc.x, terrain[(int)startBloc.x, (int)startBloc.y] + 1, startBloc.y);
+
+        for (int r = 1; r <= rayonMax; r++)
         {
-            for(int i = -rayonMax; i <= rayonMax; i++)
+            for(int i = -r; i <= r; i++)
             {
-                for (int j = -rayonMax; j <= rayonMax; j++)
+                for (int j = -r; j <= r; j++)
                 {
                     if((Mathf.Abs(i) == r || Mathf.Abs(j) == r) && (startBloc.x + i >= 0 && startBloc.x + i < terrain.GetLength(0)) && (startBloc.y + j >= 0 && startBloc.y + j < terrain.GetLength(1)))
                     {
                         if (terrain[(int)startBloc.x, (int)startBloc.y] < terrain[(int)startBloc.x + i, (int)startBloc.y + j])
                         {
-                            int blablou = (int)startBloc.x + i;
-                            int blablouDeux = (int)startBloc.y + j;
-                            Debug.Log("Add New bloc : " + blablou + " " + blablouDeux);
                             possibleBloc.Add(new Vector2(startBloc.x + i, startBloc.y + j));
                         }
                     }
@@ -65,19 +83,7 @@ public class RiverGenerator : MonoBehaviour
             }
             if (possibleBloc.Count > 0)
             {
-                int random = Random.Range(0, possibleBloc.Count);
-                Vector2 blocPossible = possibleBloc[random];
-                Debug.Log(blocPossible);
-                if (r == 1)
-                {
-                    Debug.Log("CHUI A COTE");
-                    return blocPossible;
-                }
-                else
-                {
-                    //return new Vector2(possibleBloc[random].x - r + 1, possibleBloc[random].y - r + 1);
-                    return blocPossible;
-                }
+                return possibleBloc[Random.Range(0, possibleBloc.Count)];
             }
         }
         return startBloc;
