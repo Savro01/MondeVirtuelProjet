@@ -9,66 +9,55 @@ public class RiverGenerator : MonoBehaviour
 
     public int distanceMax;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public bool[,] makeRiverLine(float[,] terrain, List<Vector2> listBordure)
     {
         //Création de la matrice rivière(droite)
         riverLineMatrix = initRiverMatrix(terrain);
 
         //Choix du/des blocs de départ
-        Vector2 startBloc = listBordure[Random.Range(0, listBordure.Count)];
+        //Vector2 startBloc = listBordure[Random.Range(0, listBordure.Count)];
+        
+        Vector2 startBloc = listBordure[55];
 
         //Pour chaque bloc de départ
         //For(int i = 0; i < listBlocDepart; i++){}
-        bool arret = false;
         int distance = 0;
-        while (!arret)
+        int rayon = 10;
+        while (distance < distanceMax)
         {
-            //terrain[startBloc.x, startBloc.y]
-            if (distance >= distanceMax)
-                arret = true;
+            Vector2 nextBloc = getNextBloc(terrain, startBloc, rayon);
 
-            Vector2 nextBloc = getNextBloc(terrain, startBloc, 5);
-
-            if (nextBloc != startBloc && !riverLineMatrix[(int)nextBloc.x, (int)nextBloc.y])
+            if (nextBloc != startBloc)
             {
                 riverLineMatrix[(int)nextBloc.x, (int)nextBloc.y] = true;
                 startBloc = nextBloc;
+                distance++;
             }
             else
-                distance = distanceMax;
-
-            distance++;
+                break;
         }
         return riverLineMatrix;
     }
 
     Vector2 getNextBloc(float[,] terrain, Vector2 startBloc, int rayonMax)
     {
+        Debug.Log("NEXT BLOC");
+        Debug.Log(startBloc);
         List<Vector2> possibleBloc = new List<Vector2>();
-        bool blocFind = false;
 
-        for(int r = 1; r < rayonMax; r++)
+        for(int r = 1; r <= rayonMax; r++)
         {
-            for(int i = -rayonMax; i < rayonMax; i++)
+            for(int i = -rayonMax; i <= rayonMax; i++)
             {
-                for (int j = -rayonMax; j < rayonMax; j++)
+                for (int j = -rayonMax; j <= rayonMax; j++)
                 {
-                    if(Mathf.Abs(i) == r || Mathf.Abs(j) == r)
+                    if((Mathf.Abs(i) == r || Mathf.Abs(j) == r) && (startBloc.x + i >= 0 && startBloc.x + i < terrain.GetLength(0)) && (startBloc.y + j >= 0 && startBloc.y + j < terrain.GetLength(1)))
                     {
                         if (terrain[(int)startBloc.x, (int)startBloc.y] < terrain[(int)startBloc.x + i, (int)startBloc.y + j])
                         {
+                            int blablou = (int)startBloc.x + i;
+                            int blablouDeux = (int)startBloc.y + j;
+                            Debug.Log("Add New bloc : " + blablou + " " + blablouDeux);
                             possibleBloc.Add(new Vector2(startBloc.x + i, startBloc.y + j));
                         }
                     }
@@ -77,14 +66,17 @@ public class RiverGenerator : MonoBehaviour
             if (possibleBloc.Count > 0)
             {
                 int random = Random.Range(0, possibleBloc.Count);
+                Vector2 blocPossible = possibleBloc[random];
+                Debug.Log(blocPossible);
                 if (r == 1)
                 {
-                    return possibleBloc[random];
+                    Debug.Log("CHUI A COTE");
+                    return blocPossible;
                 }
                 else
                 {
                     //return new Vector2(possibleBloc[random].x - r + 1, possibleBloc[random].y - r + 1);
-                    return startBloc;
+                    return blocPossible;
                 }
             }
         }
