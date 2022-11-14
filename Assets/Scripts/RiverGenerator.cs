@@ -63,50 +63,20 @@ public class RiverGenerator : MonoBehaviour
 
         for(int r = 1; r < rayonMax; r++)
         {
-            //Cotés
-            if (terrain[(int)startBloc.x, (int)startBloc.y] < terrain[(int)startBloc.x + 1, (int)startBloc.y])
+            for(int i = -rayonMax; i < rayonMax; i++)
             {
-                possibleBloc.Add(new Vector2(startBloc.x + 1, startBloc.y));
-                blocFind = true;
+                for (int j = -rayonMax; j < rayonMax; j++)
+                {
+                    if(Mathf.Abs(i) == r || Mathf.Abs(j) == r)
+                    {
+                        if (terrain[(int)startBloc.x, (int)startBloc.y] < terrain[(int)startBloc.x + i, (int)startBloc.y + j])
+                        {
+                            possibleBloc.Add(new Vector2(startBloc.x + i, startBloc.y + j));
+                            blocFind = true;
+                        }
+                    }
+                }
             }
-            if (terrain[(int)startBloc.x, (int)startBloc.y] < terrain[(int)startBloc.x, (int)startBloc.y + 1])
-            {
-                possibleBloc.Add(new Vector2(startBloc.x, startBloc.y + 1));
-                blocFind = true;
-            }
-            if (terrain[(int)startBloc.x, (int)startBloc.y] < terrain[(int)startBloc.x - 1, (int)startBloc.y])
-            {
-                possibleBloc.Add(new Vector2(startBloc.x - 1, startBloc.y));
-                blocFind = true;
-            }
-            if (terrain[(int)startBloc.x, (int)startBloc.y] < terrain[(int)startBloc.x, (int)startBloc.y - 1])
-            {
-                possibleBloc.Add(new Vector2(startBloc.x, startBloc.y - 1));
-                blocFind = true;
-            }
-
-            //Diagonales
-            if (terrain[(int)startBloc.x, (int)startBloc.y] < terrain[(int)startBloc.x + 1, (int)startBloc.y + 1])
-            {
-                possibleBloc.Add(new Vector2(startBloc.x + 1, startBloc.y + 1));
-                blocFind = true;
-            }
-            if (terrain[(int)startBloc.x, (int)startBloc.y] < terrain[(int)startBloc.x - 1, (int)startBloc.y + 1])
-            {
-                possibleBloc.Add(new Vector2(startBloc.x - 1, startBloc.y + 1));
-                blocFind = true;
-            }
-            if (terrain[(int)startBloc.x, (int)startBloc.y] < terrain[(int)startBloc.x - 1, (int)startBloc.y - 1])
-            {
-                possibleBloc.Add(new Vector2(startBloc.x - 1, startBloc.y - 1));
-                blocFind = true;
-            }
-            if (terrain[(int)startBloc.x, (int)startBloc.y] < terrain[(int)startBloc.x - 1, (int)startBloc.y + 1])
-            {
-                possibleBloc.Add(new Vector2(startBloc.x - 1, startBloc.y + 1));
-                blocFind = true;
-            }
-
             if (blocFind && r == 1)
                 return possibleBloc[Random.Range(0, possibleBloc.Count)];
             else if(blocFind && r != 1)
@@ -115,7 +85,7 @@ public class RiverGenerator : MonoBehaviour
             }
 
         }
-        return new Vector2(-1, -1);
+        return startBloc;
     }
 
     bool[,] initRiverMatrix(float[,] terrain)
