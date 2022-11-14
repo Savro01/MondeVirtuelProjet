@@ -37,28 +37,30 @@ public class MapGenerator : MonoBehaviour
 
     float[,] terrainMatrix;
 
+    List<Vector2> bordures = new List<Vector2>();
+
     void Start()
     {
         GenerateMap();
-        creationMapCube();
         creationBorduresEau();
+        creationMapCube();
     }
 
     //Returns the coordinates of the cubes which are in border of water.
-    List<Vector2> creationBorduresEau()
+    void creationBorduresEau()
     {
-        List<Vector2> bordures = new List<Vector2>();
-        for (int i = 0; i < terrainMatrix.GetLength(0); i++)
+        float matriceX = terrainMatrix.GetLength(0);
+        float matriceY = terrainMatrix.GetLength(1);
+        for (int i = 1; i < matriceX-1; i++)
         {
-            for (int j = 0; j < terrainMatrix.GetLength(1); j++)
+            for (int j = 1; j < terrainMatrix.GetLength(1)-1; j++)
             {
                 if (terrainMatrix[i, j] < 4 && (terrainMatrix[i, j + 1] == 4 || terrainMatrix[i + 1, j] == 4 || terrainMatrix[i - 1, j] == 4 || terrainMatrix[i, j - 1] == 4))
                 {
-                    bordures.Add(new Vector2(i,j));
+                    bordures.Add(new Vector2(((float)i / (float)matriceX) * 100, ((float)j / (float)matriceY) * 100));
                 }
             }
         }
-        return bordures;
     }
 
     public void GenerateMap()
@@ -187,15 +189,23 @@ public class MapGenerator : MonoBehaviour
 
     void colorCubeGestion(GameObject cube)
     {
-        if (cube.transform.position.y < 4 * cube.transform.localScale.y)
-            cube.GetComponent<MeshRenderer>().material = water;
-        else if (cube.transform.position.y < 6 * cube.transform.localScale.y)
-            cube.GetComponent<MeshRenderer>().material = sand;
-        else if (cube.transform.position.y < 40 * cube.transform.localScale.y)
-            cube.GetComponent<MeshRenderer>().material = grass;
-        else if (cube.transform.position.y < 55 * cube.transform.localScale.y)
-            cube.GetComponent<MeshRenderer>().material = rock;
+        Vector2 position = new Vector2(cube.transform.position.x, cube.transform.position.z);
+        if (!bordures.Contains(position))
+        {
+            if (cube.transform.position.y < 4 * cube.transform.localScale.y)
+                cube.GetComponent<MeshRenderer>().material = water;
+            else if (cube.transform.position.y < 6 * cube.transform.localScale.y)
+                cube.GetComponent<MeshRenderer>().material = sand;
+            else if (cube.transform.position.y < 40 * cube.transform.localScale.y)
+                cube.GetComponent<MeshRenderer>().material = grass;
+            else if (cube.transform.position.y < 55 * cube.transform.localScale.y)
+                cube.GetComponent<MeshRenderer>().material = rock;
+            else
+                cube.GetComponent<MeshRenderer>().material = snow;
+        }
         else
+        {
             cube.GetComponent<MeshRenderer>().material = snow;
+        }
     }
 }
