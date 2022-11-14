@@ -41,6 +41,24 @@ public class MapGenerator : MonoBehaviour
     {
         GenerateMap();
         creationMapCube();
+        creationBorduresEau();
+    }
+
+    //Returns the coordinates of the cubes which are in border of water.
+    List<Vector2> creationBorduresEau()
+    {
+        List<Vector2> bordures = new List<Vector2>();
+        for (int i = 0; i < terrainMatrix.GetLength(0); i++)
+        {
+            for (int j = 0; j < terrainMatrix.GetLength(1); j++)
+            {
+                if (terrainMatrix[i, j] < 4 && (terrainMatrix[i, j + 1] == 4 || terrainMatrix[i + 1, j] == 4 || terrainMatrix[i - 1, j] == 4 || terrainMatrix[i, j - 1] == 4))
+                {
+                    bordures.Add(new Vector2(i,j));
+                }
+            }
+        }
+        return bordures;
     }
 
     public void GenerateMap()
