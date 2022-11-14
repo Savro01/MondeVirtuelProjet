@@ -37,18 +37,19 @@ public class MapGenerator : MonoBehaviour
 
     float[,] terrainMatrix;
 
-    List<Vector2> bordures = new List<Vector2>();
+    //List<Vector2> bordures = new List<Vector2>();
 
     void Start()
     {
         GenerateMap();
-        creationBorduresEau();
-        creationMapCube();
+        List<Vector2> bordures = creationBorduresEau();
+        creationMapCube(bordures);
     }
 
     //Returns the coordinates of the cubes which are in border of water.
-    void creationBorduresEau()
+    List<Vector2> creationBorduresEau()
     {
+        List<Vector2> bordures = new List<Vector2>();
         float matriceX = terrainMatrix.GetLength(0);
         float matriceY = terrainMatrix.GetLength(1);
         for (int i = 1; i < matriceX-1; i++)
@@ -61,6 +62,7 @@ public class MapGenerator : MonoBehaviour
                 }
             }
         }
+        return bordures;
     }
 
     public void GenerateMap()
@@ -161,7 +163,7 @@ public class MapGenerator : MonoBehaviour
     }
 
 
-    void creationMapCube()
+    void creationMapCube(List<Vector2> bordures)
     {
         float cubeData;
         GameObject cube;
@@ -181,13 +183,13 @@ public class MapGenerator : MonoBehaviour
                     cube.transform.position = new Vector3(((float)i /(float)matriceX) * 100, ((cubeData - k) * 100/(float)matriceX), ((float)j /(float)matriceZ) * 100);
                     cube.transform.localScale = new Vector3(100 / (float)matriceX, 100/(float)matriceX, 100/(float)matriceZ);
                     cube.transform.parent = transform;
-                    colorCubeGestion(cube);
+                    colorCubeGestion(bordures, cube);
                 }
             }
         }
     }
 
-    void colorCubeGestion(GameObject cube)
+    void colorCubeGestion(List<Vector2> bordures, GameObject cube)
     {
         Vector2 position = new Vector2(cube.transform.position.x, cube.transform.position.z);
         if (!bordures.Contains(position))
