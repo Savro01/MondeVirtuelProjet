@@ -471,3 +471,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   distanceMax: 100
+  nbRiver: 10
