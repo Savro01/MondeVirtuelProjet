@@ -8,22 +8,18 @@ public class RiverGenerator : MonoBehaviour
     bool[,] riverLineMatrix;
 
     public int distanceMax;
+    public int nbRiver;
 
     public bool[,] makeRiverLine(float[,] terrain, List<Vector2> listBordure)
     {
         //Création de la matrice rivière(droite)
         riverLineMatrix = initRiverMatrix(terrain);
-
-        //Choix du/des blocs de départ
-        //Vector2 startBloc = listBordure[Random.Range(0, listBordure.Count)];
         
-
-        //Pour chaque bloc de départ
-        //For(int i = 0; i < listBlocDepart; i++){}
         int rayon = 15;
 
-        for (int i = 0; i < 50; i++)
+        for (int i = 0; i < nbRiver; i++)
         {
+            //Si plusieurs fois le meme bloc, + grosse riviére
             Vector2 startBloc = listBordure[Random.Range(0,listBordure.Count)];
             int distance = 0;
             while (distance < distanceMax)
