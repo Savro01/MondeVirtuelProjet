@@ -452,7 +452,7 @@ MonoBehaviour:
   lacunarity: 3.14
   seed: 26
   offset: {x: 9.5, y: -17.72}
-  autoUpdate: 0
+  addRiver: 0
   grass: {fileID: 2100000, guid: 1e0b6c11142d1b54f939826119518dcb, type: 2}
   water: {fileID: 2100000, guid: d50b17db46206894aa6a6727734c6805, type: 2}
   sand: {fileID: 2100000, guid: c8a5999e5e0d2114cb22ee3a220de811, type: 2}
@@ -467,8 +467,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1955038725}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 128f2747a7205c946a774b5e839426bf, type: 3}
+  m_Script: {fileID: 11500000, guid: c10daeb3001c9304caa2fac52929c257, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distanceMax: 100
-  nbRiver: 10
+  distanceMax: 40
+  nbRiver: 40
+  rayon: 4
+  elevation: 6

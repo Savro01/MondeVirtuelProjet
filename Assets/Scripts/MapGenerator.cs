@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(RiverGenerator))]
+[RequireComponent(typeof(RiverGenerator2))]
 public class MapGenerator : MonoBehaviour
 {
     // Paramétres de la noise map
@@ -27,7 +27,8 @@ public class MapGenerator : MonoBehaviour
     public int seed;
     public Vector2 offset;
 
-    public bool autoUpdate = false;
+    public bool addRiver = false;
+    bool addRiverRemember;
 
     // Paramétre du terrain
     public Material grass;
@@ -38,14 +39,15 @@ public class MapGenerator : MonoBehaviour
 
     float[,] terrainMatrix;
     bool[,] riverMatrix;
+    List<Vector2> bordures;
 
-    RiverGenerator riverGenerator;
-
-    //List<Vector2> bordures = new List<Vector2>();
+    RiverGenerator2 riverGenerator;
+    Dictionary<Vector3, GameObject> objects = new Dictionary<Vector3, GameObject>();
 
     void Start()
     {
-        riverGenerator = GetComponent<RiverGenerator>();
+        riverGenerator = GetComponent<RiverGenerator2>();
+        addRiverRemember = addRiver;
         GenerateMap();
     }
 
@@ -75,19 +77,21 @@ public class MapGenerator : MonoBehaviour
         float[,] noiseMap2 = Noise.GenerateNoiseMap(mapWidth, mapHeight, seed+1, noiseScale, octaves+1, persistance, lacunarity, offset);
 
         terrainMatrix = CreateTerrainMatrix(noiseMap, noiseMap2, 1);
-        List<Vector2> bordures = creationBorduresEau();
-        riverMatrix = riverGenerator.makeRiverLine(terrainMatrix, bordures);
+        bordures = creationBorduresEau();
+        riverMatrix = riverGenerator.makeRiversLine(terrainMatrix, bordures);
         creationMapCube(bordures);
-      
+
         MapDisplay display = FindObjectOfType<MapDisplay>();
         display.DrawNoiseMap(noiseMap);
     }
 
     private void Update()
     {
-        if (autoUpdate)
+        if (addRiver != addRiverRemember)
         {
-            GenerateMap();
+            addRiverRemember = addRiver;
+            riverMatrix = riverGenerator.makeRiversLine(terrainMatrix, bordures);
+            resetColor();
         }
     }
 
@@ -191,6 +195,7 @@ public class MapGenerator : MonoBehaviour
                     cube.transform.localScale = new Vector3(100 / (float)matriceX, 100/(float)matriceX, 100/(float)matriceZ);
                     cube.transform.parent = transform;
                     colorCubeGestion(cube, i, j);
+                    objects.Add(new Vector3(i,j,k), cube);
                 }
             }
         }
@@ -213,5 +218,13 @@ public class MapGenerator : MonoBehaviour
         }
         else
             cube.GetComponent<MeshRenderer>().material = water;
+    }
+
+    void resetColor()
+    {
+        foreach(Vector3 key in objects.Keys)
+        {
+            colorCubeGestion(objects[key], (int)key.x, (int)key.y);
+        }
     }
 }
