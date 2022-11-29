@@ -58,6 +58,8 @@ public class RiverGenerator2 : MonoBehaviour
     public void makeRiverLine(float[,] terrain, Vector2 startBloc)
     {
         int distance = 0;
+        River river = new River();
+        river.addBlock(startBloc);
 
         while (distance < distanceMax)
         {
@@ -65,13 +67,26 @@ public class RiverGenerator2 : MonoBehaviour
             
             if (nextBloc != startBloc)
             {
-                riverLineMatrix[(int)nextBloc.x, (int)nextBloc.y] = true;
+                river.addBlock(nextBloc);
+                //riverLineMatrix[(int)nextBloc.x, (int)nextBloc.y] = true;
+                
+                
                 linkPath(startBloc, nextBloc);
                 startBloc = nextBloc;
                 distance++;
             }
             else
                 break;
+        }
+
+        if (river.getBlocs().Count > 1)
+        {
+            riverLineMatrix[(int)river.getBlocs()[0].x, (int)river.getBlocs()[0].y] = true;
+            for (int i = 1; i < river.getBlocs().Count; i++)
+            {
+                riverLineMatrix[(int)river.getBlocs()[i].x, (int)river.getBlocs()[i].y] = true;
+                linkPath(river.getBlocs()[i-1], river.getBlocs()[i]);
+            }
         }
     }
 
@@ -84,6 +99,7 @@ public class RiverGenerator2 : MonoBehaviour
             Vector2 diff = nextBloc - current;
             int signX = diff.x < 0 ? -1 : diff.x > 0 ? 1 : 0;
             int signY = diff.y < 0 ? -1 : diff.y > 0 ? 1 : 0;
+
             current = current + new Vector2(signX, signY);
             riverLineMatrix[(int)current.x, (int)current.y] = true;
         }

@@ -543,8 +543,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51e75bb3010f11445bd0aca2cace7c5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapWidth: 800
-  mapHeight: 800
+  mapWidth: 400
+  mapHeight: 400
   noiseScale: 90
   octaves: 1
   persistance: 2.37
@@ -572,4 +572,5 @@ MonoBehaviour:
   distanceMax: 40
   nbRiver: 40
   rayon: 4
-  elevation: 6
+  elevation: 8
+  maxIndexBorderRemove: 20
