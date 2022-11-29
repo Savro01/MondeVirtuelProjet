@@ -22,7 +22,7 @@ public class RiverGenerator2 : MonoBehaviour
 
     Dictionary<(int,int), List<((int,int),Direction)>> NeighboursGreaterThanCurrent;
 
-    private void Start()
+    private void Awake()
     {
         NeighboursGreaterThanCurrent = new Dictionary<(int, int), List<((int, int), Direction)>>();
     }
