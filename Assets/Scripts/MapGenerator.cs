@@ -6,10 +6,10 @@ using UnityEngine;
 public class MapGenerator : MonoBehaviour
 {
     // Paramétres de la noise map
-    [Range(1, 300)]
+    [Range(1, 400)]
     public int mapWidth;
 
-    [Range(1, 300)]
+    [Range(1, 400)]
     public int mapHeight;
 
     [Range(1.01f,100f)]
