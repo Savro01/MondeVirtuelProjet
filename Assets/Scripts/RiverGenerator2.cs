@@ -5,6 +5,7 @@ using UnityEngine;
 public class RiverGenerator2 : MonoBehaviour
 {
     bool[,] riverLineMatrix;
+    bool[,] riverLineIrradMatrix;
 
     public int distanceMax;
     public int nbRiver;
@@ -13,12 +14,14 @@ public class RiverGenerator2 : MonoBehaviour
     public int rayon = 1;
 
     [Range(1, 8)]
+    public int rayonSeparation = 1;
+
+    [Range(1, 8)]
     public int elevation = 1;
 
     public int maxIndexBorderRemove = 20;
 
     List<Vector2> startBlocPossible;
-    List<Vector2> effectiveStartBloc;
 
     enum Direction { N, S, W, E, NW, NE, SW, SE };
 
@@ -34,8 +37,8 @@ public class RiverGenerator2 : MonoBehaviour
     {
         //Création de la matrice rivière(droite)
         riverLineMatrix = initRiverMatrix(terrain);
+        riverLineIrradMatrix = initRiverMatrix(terrain);
         startBlocPossible = new List<Vector2>(listBordure);
-        effectiveStartBloc = new List<Vector2>();
         
         for (int i = 0; i < nbRiver; i++)
         {
@@ -44,7 +47,6 @@ public class RiverGenerator2 : MonoBehaviour
             {
                 Vector2 startBloc = startBlocPossible[Random.Range(0, startBlocPossible.Count)];
                 //Vector2 startBloc = listBordure[i];
-                effectiveStartBloc.Add(startBloc);
                 RemoveNearBorder(startBloc, startBlocPossible, 0);
                 makeRiverLine(terrain, startBloc);
             }
@@ -68,10 +70,6 @@ public class RiverGenerator2 : MonoBehaviour
             if (nextBloc != startBloc)
             {
                 river.addBlock(nextBloc);
-                //riverLineMatrix[(int)nextBloc.x, (int)nextBloc.y] = true;
-                
-                
-                linkPath(startBloc, nextBloc);
                 startBloc = nextBloc;
                 distance++;
             }
@@ -85,6 +83,7 @@ public class RiverGenerator2 : MonoBehaviour
             for (int i = 1; i < river.getBlocs().Count; i++)
             {
                 riverLineMatrix[(int)river.getBlocs()[i].x, (int)river.getBlocs()[i].y] = true;
+                irradBlocNear(terrain, (int)river.getBlocs()[i].x, (int)river.getBlocs()[i].y, rayonSeparation); ;
                 linkPath(river.getBlocs()[i-1], river.getBlocs()[i]);
             }
         }
@@ -119,7 +118,7 @@ public class RiverGenerator2 : MonoBehaviour
             {
                 Vector2 other = new Vector2(startBloc.x + i, startBloc.y + j);
 
-                if (other.x > 0 && other.x < width && other.y > 0 && other.y < lenght)
+                if (other.x > 0 && other.x < width && other.y > 0 && other.y < lenght && !riverLineIrradMatrix[(int)other.x,(int)other.y])
                 {
                     if(NeighboursGreaterThanCurrent.ContainsKey(((int)other.x, (int)other.y)))
                     {
@@ -217,13 +216,25 @@ public class RiverGenerator2 : MonoBehaviour
         }
     }
 
+    //Set dans riverLineIrradMatrix pour dire quels bloc sont innacessible
+    void irradBlocNear(float[,] terrain, int x, int z, int radius)
+    {
+        int width = terrain.GetLength(0);
+        int lenght = terrain.GetLength(1);
+
+        riverLineIrradMatrix[x, z] = true;
+        for (int i = -radius; i <= radius; i++)
+        {
+            for (int j = -radius; j <= radius; j++)
+            {
+                if (x+i > 0 && x+i < width && z+j > 0 && z+j < lenght)
+                    riverLineIrradMatrix[x+i, z+j] = true;
+            }
+        }
+    }
+
     public List<Vector2> getStartBlocPossible()
     {
         return startBlocPossible;
-    }
-
-    public List<Vector2> geteffectiveStartBloc()
-    {
-        return effectiveStartBloc;
     }
 }
