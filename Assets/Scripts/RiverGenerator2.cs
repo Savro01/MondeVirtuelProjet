@@ -13,8 +13,8 @@ public class RiverGenerator2 : MonoBehaviour
     [Range(1,8)]
     public int rayon = 1;
 
-    [Range(1, 8)]
-    public int rayonSeparation = 1;
+    [Range(4, 20)]
+    public int rayonSeparation = 10;
 
     [Range(1, 8)]
     public int elevation = 1;
@@ -83,7 +83,7 @@ public class RiverGenerator2 : MonoBehaviour
             for (int i = 1; i < river.getBlocs().Count; i++)
             {
                 riverLineMatrix[(int)river.getBlocs()[i].x, (int)river.getBlocs()[i].y] = true;
-                irradBlocNear(terrain, (int)river.getBlocs()[i].x, (int)river.getBlocs()[i].y, rayonSeparation); ;
+                irradBlocNear(terrain, (int)river.getBlocs()[i].x, (int)river.getBlocs()[i].y, rayonSeparation);
                 linkPath(river.getBlocs()[i-1], river.getBlocs()[i]);
             }
         }

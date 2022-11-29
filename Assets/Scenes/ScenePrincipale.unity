@@ -572,5 +572,6 @@ MonoBehaviour:
   distanceMax: 40
   nbRiver: 40
   rayon: 4
+  rayonSeparation: 10
   elevation: 8
   maxIndexBorderRemove: 20
