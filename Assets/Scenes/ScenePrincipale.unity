@@ -569,9 +569,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c10daeb3001c9304caa2fac52929c257, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distanceMax: 40
+  distanceMax: 200
   nbRiver: 40
-  rayon: 4
+  rayon: 5
   rayonSeparation: 10
-  elevation: 8
-  maxIndexBorderRemove: 20
+  elevation: 2

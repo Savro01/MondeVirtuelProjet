@@ -204,9 +204,7 @@ public class MapGenerator : MonoBehaviour
 
     void colorCubeGestion(GameObject cube, int x, int z)
     {
-        if (bordures.Contains(new Vector2(x, z)))
-            cube.GetComponent<MeshRenderer>().material = snow;
-        else if (!riverMatrix[x, z])
+        if (!riverMatrix[x, z])
         {
             if (cube.transform.position.y < 4 * cube.transform.localScale.y)
                 cube.GetComponent<MeshRenderer>().material = water;
