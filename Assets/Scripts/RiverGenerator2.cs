@@ -15,8 +15,10 @@ public class RiverGenerator2 : MonoBehaviour
     [Range(1, 8)]
     public int elevation = 1;
 
+    public int maxIndexBorderRemove = 20;
 
     List<Vector2> startBlocPossible;
+    List<Vector2> effectiveStartBloc;
 
     enum Direction { N, S, W, E, NW, NE, SW, SE };
 
@@ -33,15 +35,21 @@ public class RiverGenerator2 : MonoBehaviour
         //Création de la matrice rivière(droite)
         riverLineMatrix = initRiverMatrix(terrain);
         startBlocPossible = new List<Vector2>(listBordure);
+        effectiveStartBloc = new List<Vector2>();
         
         for (int i = 0; i < nbRiver; i++)
         {
             //Si plusieurs fois le meme bloc, + grosse riviére
-            Vector2 startBloc = startBlocPossible[Random.Range(0, startBlocPossible.Count)];
-            //Vector2 startBloc = listBordure[i];
-            startBlocPossible.Remove(startBloc);
-            makeRiverLine(terrain, startBloc);
-            
+            if (startBlocPossible.Count != 0)
+            {
+                Vector2 startBloc = startBlocPossible[Random.Range(0, startBlocPossible.Count)];
+                //Vector2 startBloc = listBordure[i];
+                effectiveStartBloc.Add(startBloc);
+                RemoveNearBorder(startBloc, startBlocPossible, 0);
+                makeRiverLine(terrain, startBloc);
+            }
+            else
+                break;
         }
 
         return riverLineMatrix;
@@ -128,8 +136,6 @@ public class RiverGenerator2 : MonoBehaviour
         return Mathf.Pow((cubeCenter.x - center.x), 2) + Mathf.Pow((cubeCenter.y - center.y), 2) <= Mathf.Pow(radius, 2);
     }
 
-
-
     bool[,] initRiverMatrix(float[,] terrain)
     {
         bool[,] mat = new bool[terrain.GetLength(0), terrain.GetLength(1)];
@@ -172,5 +178,36 @@ public class RiverGenerator2 : MonoBehaviour
             }
         }
         return mat;
+    }
+
+    //Remove le bloc courant de la bordure et les blocs alentours, récursivement
+    void RemoveNearBorder(Vector2 startBloc, List<Vector2> startBlocPossible, int index)
+    {
+        //Retire le bloc courant
+        startBlocPossible.Remove(startBloc);
+        index++;
+        //Retire récursivement les blocs proches
+        if (index < maxIndexBorderRemove)
+        {
+            for (int i = -1; i <= 1; i++)
+            {
+                for (int j = -1; j <= 1; j++)
+                {
+                    Vector2 nextStartBloc = new Vector2(startBloc.x + i, startBloc.y + j);
+                    if (startBlocPossible.Contains(nextStartBloc))
+                        RemoveNearBorder(nextStartBloc, startBlocPossible, index);
+                }
+            }
+        }
+    }
+
+    public List<Vector2> getStartBlocPossible()
+    {
+        return startBlocPossible;
+    }
+
+    public List<Vector2> geteffectiveStartBloc()
+    {
+        return effectiveStartBloc;
     }
 }

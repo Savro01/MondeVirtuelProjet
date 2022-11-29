@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(RiverGenerator2))]
 public class MapGenerator : MonoBehaviour
 {
-    // Paramétres de la noise map
+    // Paramï¿½tres de la noise map
     [Range(1, 1000)]
     public int mapWidth;
 
@@ -30,7 +30,7 @@ public class MapGenerator : MonoBehaviour
     public bool addRiver = false;
     bool addRiverRemember;
 
-    // Paramétre du terrain
+    // Paramï¿½tre du terrain
     public Material grass;
     public Material water;
     public Material sand;
@@ -40,6 +40,7 @@ public class MapGenerator : MonoBehaviour
     float[,] terrainMatrix;
     bool[,] riverMatrix;
     List<Vector2> bordures;
+    List<Vector2> effectiveBordures;
 
     RiverGenerator2 riverGenerator;
     Dictionary<Vector3, GameObject> objects = new Dictionary<Vector3, GameObject>();
@@ -79,6 +80,8 @@ public class MapGenerator : MonoBehaviour
         terrainMatrix = CreateTerrainMatrix(noiseMap, noiseMap2, 1);
         bordures = creationBorduresEau();
         riverMatrix = riverGenerator.makeRiversLine(terrainMatrix, bordures);
+        bordures = riverGenerator.getStartBlocPossible();
+        effectiveBordures = riverGenerator.geteffectiveStartBloc();
         creationMapCube(bordures);
 
         MapDisplay display = FindObjectOfType<MapDisplay>();
@@ -203,7 +206,11 @@ public class MapGenerator : MonoBehaviour
 
     void colorCubeGestion(GameObject cube, int x, int z)
     {
-        if(!riverMatrix[x, z])
+        if (bordures.Contains(new Vector2(x, z)))
+            cube.GetComponent<MeshRenderer>().material = snow;
+        else if (effectiveBordures.Contains(new Vector2(x, z)))
+            cube.GetComponent<MeshRenderer>().material = rock;
+        else if (!riverMatrix[x, z])
         {
             if (cube.transform.position.y < 4 * cube.transform.localScale.y)
                 cube.GetComponent<MeshRenderer>().material = water;
