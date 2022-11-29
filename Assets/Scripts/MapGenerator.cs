@@ -116,7 +116,7 @@ public class MapGenerator : MonoBehaviour
             {
                 //Getting height for the cube
                 float height;
-                height = Mathf.Round(noiseMap1[x, z] * x/3 + 2 - noiseMap2[x, z] * (terrainMatrix.GetLength(1)-z) /20);
+                height = Mathf.Round(noiseMap1[x, z] * x/5 - noiseMap2[x, z] * (terrainMatrix.GetLength(1)-z) /30);
                 if (height < 4)
                 {
                     height = 3;
