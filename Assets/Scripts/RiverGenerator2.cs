@@ -10,16 +10,14 @@ public class RiverGenerator2 : MonoBehaviour
     public int distanceMax;
     public int nbRiver;
 
-    [Range(1,8)]
-    public int rayon = 1;
-
     [Range(4, 20)]
     public int rayonSeparation = 10;
 
+    [Range(1,8)]
+    public int rayon = 1;
+
     [Range(1, 8)]
     public int elevation = 1;
-
-    public int maxIndexBorderRemove = 20;
 
     List<Vector2> startBlocPossible;
 
@@ -35,14 +33,15 @@ public class RiverGenerator2 : MonoBehaviour
 
     public bool[,] makeRiversLine(float[,] terrain, List<Vector2> listBordure)
     {
-        //Création de la matrice rivière(droite)
+        //Crï¿½ation de la matrice riviï¿½re(droite)
         riverLineMatrix = initRiverMatrix(terrain);
         riverLineIrradMatrix = initRiverMatrix(terrain);
         startBlocPossible = new List<Vector2>(listBordure);
         
+       
         for (int i = 0; i < nbRiver; i++)
         {
-            //Si plusieurs fois le meme bloc, + grosse riviére
+            //Si plusieurs fois le meme bloc, + grosse riviï¿½re
             if (startBlocPossible.Count != 0)
             {
                 Vector2 startBloc = startBlocPossible[Random.Range(0, startBlocPossible.Count)];
@@ -53,6 +52,7 @@ public class RiverGenerator2 : MonoBehaviour
             else
                 break;
         }
+        
 
         return riverLineMatrix;
     }
@@ -77,6 +77,7 @@ public class RiverGenerator2 : MonoBehaviour
                 break;
         }
 
+
         if (river.getBlocs().Count > 1)
         {
             riverLineMatrix[(int)river.getBlocs()[0].x, (int)river.getBlocs()[0].y] = true;
@@ -84,9 +85,19 @@ public class RiverGenerator2 : MonoBehaviour
             {
                 riverLineMatrix[(int)river.getBlocs()[i].x, (int)river.getBlocs()[i].y] = true;
                 irradBlocNear(terrain, (int)river.getBlocs()[i].x, (int)river.getBlocs()[i].y, rayonSeparation);
-                linkPath(river.getBlocs()[i-1], river.getBlocs()[i], terrain);
+                linkPath(river.getBlocs()[i - 1], river.getBlocs()[i], terrain);
             }
         }
+
+        foreach(Vector2 affluent in river.getAffluents().Keys)
+        {
+            rayon = 8;
+            elevation = 2;
+            linkPath(river.getAffluents()[affluent], affluent, terrain);
+            makeRiverLine(terrain, affluent);
+
+        }
+
     }
     void linkPath(Vector2 startBloc, Vector2 nextBloc, float[,] terrain)
     {
@@ -124,7 +135,7 @@ public class RiverGenerator2 : MonoBehaviour
 
                 if (other.x > 0 && other.x < width && other.y > 0 && other.y < lenght && !riverLineIrradMatrix[(int)other.x,(int)other.y])
                 {
-                    if(NeighboursGreaterThanCurrent.ContainsKey(((int)other.x, (int)other.y)))
+                    if(NeighboursGreaterThanCurrent.ContainsKey(((int)other.x, (int)other.y)) && NeighboursGreaterThanCurrent[((int)other.x, (int)other.y)].Count > 0)
                     {
                         bool res = isInCircle(startBloc, other, radius);
                         if (res)
@@ -200,14 +211,14 @@ public class RiverGenerator2 : MonoBehaviour
         return mat;
     }
 
-    //Remove le bloc courant de la bordure et les blocs alentours, récursivement
+    //Remove le bloc courant de la bordure et les blocs alentours, rï¿½cursivement
     void RemoveNearBorder(Vector2 startBloc, List<Vector2> startBlocPossible, int index)
     {
         //Retire le bloc courant
         startBlocPossible.Remove(startBloc);
         index++;
-        //Retire récursivement les blocs proches
-        if (index < maxIndexBorderRemove)
+        //Retire rï¿½cursivement les blocs proches
+        if (index < rayonSeparation)
         {
             for (int i = -1; i <= 1; i++)
             {
