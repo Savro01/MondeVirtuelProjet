@@ -84,12 +84,11 @@ public class RiverGenerator2 : MonoBehaviour
             {
                 riverLineMatrix[(int)river.getBlocs()[i].x, (int)river.getBlocs()[i].y] = true;
                 irradBlocNear(terrain, (int)river.getBlocs()[i].x, (int)river.getBlocs()[i].y, rayonSeparation);
-                linkPath(river.getBlocs()[i-1], river.getBlocs()[i]);
+                linkPath(river.getBlocs()[i-1], river.getBlocs()[i], terrain);
             }
         }
     }
-
-    void linkPath(Vector2 startBloc, Vector2 nextBloc)
+    void linkPath(Vector2 startBloc, Vector2 nextBloc, float[,] terrain)
     {
         Vector2 current = startBloc;
 
@@ -98,6 +97,11 @@ public class RiverGenerator2 : MonoBehaviour
             Vector2 diff = nextBloc - current;
             int signX = diff.x < 0 ? -1 : diff.x > 0 ? 1 : 0;
             int signY = diff.y < 0 ? -1 : diff.y > 0 ? 1 : 0;
+
+            if (Mathf.Abs(signX) == 1 && Mathf.Abs(signY) == 1 && (terrain[(int)current.x, (int)current.y] + 2 == terrain[(int)current.x + signX, (int)current.y + signY]))
+            {
+                riverLineMatrix[(int)current.x + signX, (int)current.y] = true;
+            }
 
             current = current + new Vector2(signX, signY);
             riverLineMatrix[(int)current.x, (int)current.y] = true;
@@ -133,6 +137,7 @@ public class RiverGenerator2 : MonoBehaviour
                             {
                                 nextBloc = other;
                                 ratioKeep = ratio;
+                                break;
                             }
                         }
                     }
