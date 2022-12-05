@@ -51,7 +51,10 @@ public class MapGenerator : MonoBehaviour
         GenerateMap();
     }
 
-    //Returns the coordinates of the cubes which are in border of water.
+    /// <summary>
+    /// Return coordinate list (in matrice) of all bloc near water border
+    /// </summary>
+    /// <returns></returns>
     List<Vector2> creationBorduresEau()
     {
         List<Vector2> bordures = new List<Vector2>();
@@ -71,17 +74,25 @@ public class MapGenerator : MonoBehaviour
         return bordures;
     }
 
+    /// <summary>
+    /// Principal function which create the map
+    /// </summary>
     public void GenerateMap()
     {
+        //Generate two noiseMap for create the map
         float[,] noiseMap = Noise.GenerateNoiseMap(mapWidth, mapHeight, seed, noiseScale, octaves, persistance, lacunarity, offset);
         float[,] noiseMap2 = Noise.GenerateNoiseMap(mapWidth, mapHeight, seed+1, noiseScale, octaves+1, persistance, lacunarity, offset);
 
+        //Create the terrainMatrix which contain height of bloc based on noiseMap
         terrainMatrix = CreateTerrainMatrix(noiseMap, noiseMap2, 1);
+        //Get borders
         bordures = creationBorduresEau();
+        //Create riverMatrix based on terrainMatrix and borders
         riverMatrix = riverGenerator.makeRiversLine(terrainMatrix, bordures);
-        bordures = riverGenerator.getStartBlocPossible();
-        creationMapCube(bordures);
+        //Create the physical map with blocs
+        creationMapCube();
 
+        //Display the noiseMap
         MapDisplay display = FindObjectOfType<MapDisplay>();
         display.DrawNoiseMap(noiseMap);
     }
@@ -127,6 +138,14 @@ public class MapGenerator : MonoBehaviour
         return terrainMatrix;
     }
 
+    /// <summary>
+    /// Get the difference of height between the current bloc and his neighbour
+    /// </summary>
+    /// <param name="i">The x position of currentBloc</param>
+    /// <param name="j">The y position of currentBloc</param>
+    /// <param name="matriceX">The x size of the matrice terrain</param>
+    /// <param name="matriceZ">the y size of the matrice terrain</param>
+    /// <returns></returns>
     float getNeighbourDiff(int i, int j, int matriceX, int matriceZ)
     {
         float min;
@@ -174,8 +193,10 @@ public class MapGenerator : MonoBehaviour
         return terrainMatrix[i, j] > min ? terrainMatrix[i, j] - min : 1;
     }
 
-
-    void creationMapCube(List<Vector2> bordures)
+    /// <summary>
+    /// Create the map with cubes
+    /// </summary>
+    void creationMapCube()
     {
         float cubeData;
         GameObject cube;
@@ -202,6 +223,13 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Color the created cube with a color based on his height and if it's part of a river
+    /// </summary>
+    /// <param name="cube">The current bloc to color</param>
+    /// <param name="x">The x position in the matrice of the bloc</param>
+    /// <param name="z">The y position in the matrice of the bloc</param>
+ 
     void colorCubeGestion(GameObject cube, int x, int z)
     {
         if (!riverMatrix[x, z])
@@ -221,6 +249,9 @@ public class MapGenerator : MonoBehaviour
             cube.GetComponent<MeshRenderer>().material = water;
     }
 
+    /// <summary>
+    /// Recolor all the cube of the map
+    /// </summary>
     void resetColor()
     {
         foreach(Vector3 key in objects.Keys)

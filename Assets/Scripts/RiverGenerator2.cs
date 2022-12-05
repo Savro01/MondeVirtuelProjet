@@ -30,7 +30,12 @@ public class RiverGenerator2 : MonoBehaviour
         NeighboursGreaterThanCurrent = new Dictionary<(int, int), List<((int, int), Direction)>>();
     }
 
-
+    /// <summary>
+    /// Create all the river of the maps
+    /// </summary>
+    /// <param name="terrain">The matrice terrain</param>
+    /// <param name="listBordure">The list of border near water</param>
+    /// <returns></returns>
     public bool[,] makeRiversLine(float[,] terrain, List<Vector2> listBordure)
     {
         //Cr�ation de la matrice rivi�re(droite)
@@ -41,11 +46,11 @@ public class RiverGenerator2 : MonoBehaviour
        
         for (int i = 0; i < nbRiver; i++)
         {
-            //Si plusieurs fois le meme bloc, + grosse rivi�re
             if (startBlocPossible.Count != 0)
             {
+                //Get a bloc randomly in the possible start bloc (= the border bloc)
                 Vector2 startBloc = startBlocPossible[Random.Range(0, startBlocPossible.Count)];
-                //Vector2 startBloc = listBordure[i];
+                //Update the list of possible start bloc and create a single river
                 RemoveNearBorder(startBloc, startBlocPossible, 0);
                 makeRiverLine(terrain, startBloc);
             }
@@ -57,6 +62,11 @@ public class RiverGenerator2 : MonoBehaviour
         return riverLineMatrix;
     }
 
+    /// <summary>
+    /// Create a single river of the map
+    /// </summary>
+    /// <param name="terrain">The matrice terrain</param>
+    /// <param name="startBloc">The start bloc of the river</param>
     public void makeRiverLine(float[,] terrain, Vector2 startBloc)
     {
         int distance = 0;
@@ -99,6 +109,13 @@ public class RiverGenerator2 : MonoBehaviour
         }
 
     }
+
+    /// <summary>
+    /// Link the path between two bloc of a river
+    /// </summary>
+    /// <param name="startBloc">The first bloc to link</param>
+    /// <param name="nextBloc">The second bloc to link</param>
+    /// <param name="terrain">The matrice terrain</param>
     void linkPath(Vector2 startBloc, Vector2 nextBloc, float[,] terrain)
     {
         Vector2 current = startBloc;
@@ -119,6 +136,13 @@ public class RiverGenerator2 : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Get the next bloc in the path of the river
+    /// </summary>
+    /// <param name="terrain">The matrice terrain</param>
+    /// <param name="startBloc">The bloc before the bloc we search</param>
+    /// <param name="radius">The radius of scan to find a new bloc</param>
+    /// <returns></returns>
     Vector2 getNextBloc(float[,] terrain, Vector2 startBloc, int radius)
     {
         int width = terrain.GetLength(0);
@@ -162,11 +186,23 @@ public class RiverGenerator2 : MonoBehaviour
         return nextBloc;
     }
 
+    /// <summary>
+    /// Return if a cube is in the radius of the circle with another for origin
+    /// </summary>
+    /// <param name="center">The center of the circle</param>
+    /// <param name="cubeCenter">The cube we want to know if he's inside</param>
+    /// <param name="radius">The radius of the circle</param>
+    /// <returns></returns>
     bool isInCircle(Vector2 center, Vector2 cubeCenter, int radius)
     {
         return Mathf.Pow((cubeCenter.x - center.x), 2) + Mathf.Pow((cubeCenter.y - center.y), 2) <= Mathf.Pow(radius, 2);
     }
 
+    /// <summary>
+    /// Initialise the river matrice with false everywhere
+    /// </summary>
+    /// <param name="terrain">The terrain matrice</param>
+    /// <returns></returns>
     bool[,] initRiverMatrix(float[,] terrain)
     {
         bool[,] mat = new bool[terrain.GetLength(0), terrain.GetLength(1)];
@@ -211,7 +247,12 @@ public class RiverGenerator2 : MonoBehaviour
         return mat;
     }
 
-    //Remove le bloc courant de la bordure et les blocs alentours, r�cursivement
+    /// <summary>
+    /// Remove the current bloc and bloc around of it of the startbloc list
+    /// </summary>
+    /// <param name="startBloc">The bloc to remove</param>
+    /// <param name="startBlocPossible">The startbloc list</param>
+    /// <param name="index">The index of the fonction, to stop the recursivity</param>
     void RemoveNearBorder(Vector2 startBloc, List<Vector2> startBlocPossible, int index)
     {
         //Retire le bloc courant
@@ -232,7 +273,13 @@ public class RiverGenerator2 : MonoBehaviour
         }
     }
 
-    //Set dans riverLineIrradMatrix pour dire quels bloc sont innacessible
+    /// <summary>
+    /// Set the innacessible bloc near a river in riverLineIrradMatrix
+    /// </summary>
+    /// <param name="terrain">The matrice Terrain</param>
+    /// <param name="x">The position x in the matrice of the current bloc</param>
+    /// <param name="z">The position y in the matrice of the current bloc</param>
+    /// <param name="radius">The radius of the innaccessible zone </param>
     void irradBlocNear(float[,] terrain, int x, int z, int radius)
     {
         int width = terrain.GetLength(0);
@@ -249,6 +296,10 @@ public class RiverGenerator2 : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Return the modified list of borders of water
+    /// </summary>
+    /// <returns></returns>
     public List<Vector2> getStartBlocPossible()
     {
         return startBlocPossible;
