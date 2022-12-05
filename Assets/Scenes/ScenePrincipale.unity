@@ -571,6 +571,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   distanceMax: 200
   nbRiver: 40
-  rayon: 5
   rayonSeparation: 10
+  rayon: 5
   elevation: 2
+  threshold: 0.5

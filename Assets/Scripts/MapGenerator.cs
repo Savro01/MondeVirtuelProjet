@@ -13,19 +13,26 @@ public class MapGenerator : MonoBehaviour
     [Range(1, 1000)]
     public int mapHeight;
 
+    //Scale of the noise map
     [Range(1.01f,100f)]
     public float noiseScale;
 
+    //The number of levels of detail you want you perlin noise to have
     [Range(1f, 10f)]
     public int octaves;
 
+    //number that determines how much each octave contributes to the overall shape
     [Range(0.01f, 10f)]
     public float persistance;
 
+    //number that determines how much detail is added or removed at each octave
     [Range(1f, 10f)]
     public float lacunarity;
 
+    //Seed of the noisemap
     public int seed;
+
+    //offset compared to the origin of the noisemap
     public Vector2 offset;
 
     //A boolean to recreate all the river

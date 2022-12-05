@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class MapDisplay : MonoBehaviour
 {
+    //Allows to apply a texture to an object
     public Renderer textureRenderer;
 
     /// <summary>

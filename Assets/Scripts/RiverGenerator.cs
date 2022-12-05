@@ -25,9 +25,13 @@ public class RiverGenerator : MonoBehaviour
     [Range(1, 8)]
     public int elevation = 1;
 
+    [Range(0f, 1f)]
+    public float threshold;
+
     //The list of possible bloc to start a river (= the list of borders)
     List<Vector2> startBlocPossible;
 
+    //The list of each bloc of the map located with an height that correspond to a multiple of elevation parameter and near an other bloc located upper than one 
     Dictionary<(int,int), List<(int,int)>> NeighboursGreaterThanCurrent;
 
     private void Awake()
@@ -75,7 +79,7 @@ public class RiverGenerator : MonoBehaviour
     public void makeRiverLine(float[,] terrain, Vector2 startBloc)
     {
         int distance = 0;
-        River river = new River();
+        River river = new River(threshold);
         river.addBlock(startBloc);
 
         while (distance < distanceMax)
