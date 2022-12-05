@@ -2,13 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(RiverGenerator2))]
+[RequireComponent(typeof(RiverGenerator))]
 public class MapGenerator : MonoBehaviour
 {
-    // Param�tres de la noise map
+    //The width of the noise map
     [Range(1, 1000)]
     public int mapWidth;
 
+    //The height of the noise map
     [Range(1, 1000)]
     public int mapHeight;
 
@@ -27,26 +28,30 @@ public class MapGenerator : MonoBehaviour
     public int seed;
     public Vector2 offset;
 
+    //A boolean to recreate all the river
     public bool addRiver = false;
     bool addRiverRemember;
 
-    // Param�tre du terrain
+    //All the material needed to create the map
     public Material grass;
     public Material water;
     public Material sand;
     public Material rock;
     public Material snow;
 
+    //The main matrice of the code, use to tell the height of each bloc of the map
     float[,] terrainMatrix;
+    //The river matrice, use to tell wich bloc is part of a river
     bool[,] riverMatrix;
+    //The list of all the border of water in the map
     List<Vector2> bordures;
 
-    RiverGenerator2 riverGenerator;
+    RiverGenerator riverGenerator;
     Dictionary<Vector3, GameObject> objects = new Dictionary<Vector3, GameObject>();
 
     void Start()
     {
-        riverGenerator = GetComponent<RiverGenerator2>();
+        riverGenerator = GetComponent<RiverGenerator>();
         addRiverRemember = addRiver;
         GenerateMap();
     }
